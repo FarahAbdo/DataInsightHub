@@ -20,8 +20,18 @@ def analyze():
     if file.filename == '':
         return "No selected file"
     
+    # Check if the file is not empty
+    if file.seek(0, 2) == 0:
+        return "Empty file"
+    
+    # Rewind the file cursor before reading
+    file.seek(0)
+    
     # Process the uploaded CSV file
-    electric_cars = pd.read_csv(file)
+    try:
+        electric_cars = pd.read_csv(file)
+    except pd.errors.EmptyDataError:
+        return "No data found in the CSV file"
     
     # Perform data analysis using your existing code
 
@@ -36,10 +46,12 @@ def analyze():
         HumanMessage(content=f"{dataset_description}\n\n{suggest_questions}")
     ]
     rsps_suggest_questions = chat(msgs_suggest_questions)
-    analysis_results = rsps_suggest_questions.content
+    
+    # Extract questions and separate them with newline
+    questions = rsps_suggest_questions.content.split('\n')
 
-    # Return the analysis results or questions to the user
-    return analysis_results
+    # Return each question in a separate line
+    return '<br>'.join(questions)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
