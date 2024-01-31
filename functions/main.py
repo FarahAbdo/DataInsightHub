@@ -33,14 +33,16 @@ def analyze():
     except pd.errors.EmptyDataError:
         return "No data found in the CSV file"
     
-    # Perform data analysis using your existing code
+    # Create a new ChatOpenAI instance for each analysis
+    chat = ChatOpenAI()
 
     # Example: Suggest questions using langchain
-    dataset_description = """
-    You have a dataset about electric cars registered in Washington state, USA in 2020. It is available as a pandas DataFrame named `electric_cars`.
-    Each row in the dataset represents the count of the number of cars registered within a city, for a particular model.
+    dataset_description = f"""
+    You have a dataset about {electric_cars.shape[0]} rows and {electric_cars.shape[1]} columns. Analyze it accurately.
+    The columns in the dataset are: {', '.join(electric_cars.columns)}.
+    The first few rows of the dataset are:\n{electric_cars.head()}
     """
-    suggest_questions = "Suggest some data analysis questions that could be answered with this dataset."
+    suggest_questions = "Suggest some specific data analysis questions that could be answered with this dataset."
     msgs_suggest_questions = [
         SystemMessage(content="You are a data analysis expert."),
         HumanMessage(content=f"{dataset_description}\n\n{suggest_questions}")
