@@ -15,6 +15,7 @@ project-root/
 |   |-- main.py              # Flask app and integration with langchain
 |   |-- templates/           # HTML templates for the web UI
 |       |-- index.html
+        |-- analyze.html
 |-- openai/                  # OpenAI-related configurations or helper functions
 |-- .gitignore
 |-- README.md
@@ -34,6 +35,7 @@ project-root/
   - **main.py**: Main Python script containing the Flask app and integration with the langchain code.
   - **templates/**: Directory containing HTML templates for the web UI.
     - **index.html**: HTML file for the main web interface.
+    - **analyze.html**: HTML file for the analyze web interface.
 - **openai/**: OpenAI-related configurations or helper functions.
 - **.gitignore**: Specifies files and directories that should be ignored by version control.
 - **README.md**: Project documentation, providing an overview and instructions for developers.
