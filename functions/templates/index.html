@@ -1,16 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Analysis Helper</title>
+    <title>Data Insight Hub</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Import custom font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+    <!-- Import icons from Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            padding: 50px;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff9900;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .grid>div,
+        form {
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Glass-like border */
+            border-radius: 8px; /* Rounded corners for a smoother appearance */
+            overflow: hidden; /* Ensure border doesn't extend beyond the border-radius */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            margin-bottom: 20px; /* Add margin between boxes */
+        }
+
+        /* Add a hover effect to make the boxes interactive */
+        .grid>div:hover,
+        form:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+        }
+
+        .grid>div h3 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for form */
+            padding: 20px;
+            border-radius: 8px; /* Rounded corners for a smoother appearance */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            margin-bottom: 20px; /* Add margin between boxes */
+        }
+
+        form h2,
+        form p {
+            margin: 10px;
+            color: #333;
+        }
+
+        form label,
+        form button {
+            margin: 10px;
+        }
+
+        form input {
+            width: 300px;
+            padding: 10px;
+        }
+
+        form button {
+            width: 200px;
+            height: 40px;
+            background-color: #ff9900;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        form button:hover {
+            background-color: #ff6600;
+        }
+
+        .instructions,
+        .alert {
+            max-width: 600px;
+            margin: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for instructions and alert */
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+
+        .instructions ul {
+            list-style-type: disc;
+            color: #333;
+        }
+
+        .instructions ol {
+            list-style-type: decimal;
+            color: #333;
+        }
+
+        .alert.success {
+            background-color: #4CAF50;
+        }
+
+        .alert.error {
+            background-color: #F44336;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>Data Analysis Helper</h1>
-    <form action="/analyze" method="post" enctype="multipart/form-data">
-        <label for="csvFile">Upload CSV File:</label>
-        <input type="file" name="csvFile" accept=".csv" required>
-        <button type="submit">Analyze Data</button>
-    </form>
+    <header>
+        <h1>Data Insight Hub</h1>
+    </header>
+    <div class="container">
+        <div class="grid">
+            <div>
+                <h3>What is Data Analysis?</h3>
+                <p>Data analysis is the process of collecting, organizing, and interpreting data to find patterns, trends, and insights. Data analysis can help you make better decisions, solve problems, and improve performance.</p>
+            </div>
+        </div>
+        <form action="{{ url_for('analyze') }}" method="post" enctype="multipart/form-data">
+            <h2>Upload Your Data File</h2>
+            <p>Upload your data file in <b>CSV</b> format and get instant insights.</p>
+            <label for="csvFile">Choose CSV File:</label>
+            <input type="file" name="csvFile" id="csvFile" accept=".csv" required>
+            <button type="submit" id="submitBtn">Analyze Data</button>
+            <div id="alert"></div>
+        </form>
+        <div class="instructions">
+            <h3>How to Upload Your Data File</h3>
+            <p>Follow these steps to upload your data file:</p>
+            <ul>
+                <li>  Prepare your data in a spreadsheet software, such as Excel, Google Sheets, or LibreOffice Calc.</li>
+                <li>  Save your data as a CSV file. A CSV file is a plain text file that contains comma-separated values.</li>
+                <li>  Click on the "Choose CSV File" button and select your CSV file from your computer.</li>
+                <li>  Click on the "Analyze Data" button and wait for the results.</li>
+            </ul>
+            <h3>Example of a CSV File</h3>
+            <p>Here is an example of how a CSV file looks like:</p>
+            <pre><code>Name,Age,Gender,Occupation
+Alice,25,Female,Teacher
+Bob,32,Male,Engineer
+Charlie,28,Male,Doctor
+Diana,23,Female,Student
+Eve,30,Female,Designer
+</code></pre>
+        </div>
+    </div>
+    <footer>
+        <p>© 2024 Farah Abdou. All rights reserved.<a href="https://www.linkedin.com/in/your-linkedin-username" target="_blank"><i class="fab fa-linkedin"></i></a></p>
+    </footer>
+    <script>
+        // Add your custom JavaScript code here
+        document.getElementById("csvFile").addEventListener("change", function () {
+            const fileName = this.files[0].name;
+            document.getElementById("file-name").innerText = `Selected File: ${fileName}`;
+        });
+    
+        var uploadForm = document.getElementById("upload-form");
+    
+        uploadForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+    
+            // Add your custom logic for form submission here
+            // You can use AJAX or other methods for handling form submission
+            // Example: Fetch API or XMLHttpRequest
+    
+            // Display a loading message or perform other actions
+            alert("Form submitted. Add your logic here.");
+        });
+    </script>
+    
 </body>
+
 </html>

@@ -29,31 +29,37 @@ def analyze():
     
     # Process the uploaded CSV file
     try:
-        electric_cars = pd.read_csv(file)
+        df = pd.read_csv(file)
     except pd.errors.EmptyDataError:
         return "No data found in the CSV file"
     
     # Create a new ChatOpenAI instance for each analysis
-    chat = ChatOpenAI()
+    chat_instance = ChatOpenAI()
+
+    # Generate dataset description dynamically with additional context
+    dataset_description = f"""
+    You have a dataset with {df.shape[0]} rows and {df.shape[1]} columns.
+    Here is some additional information about the dataset:\n
+    - Column names: {', '.join(df.columns)}\n
+    - Data types: {', '.join(df.dtypes.astype(str))}\n
+    - Unique values per column:\n{df.nunique()}\n
+    - Summary statistics:\n{df.describe()}
+    """
 
     # Example: Suggest questions using langchain
-    dataset_description = f"""
-    You have a dataset about {electric_cars.shape[0]} rows and {electric_cars.shape[1]} columns. Analyze it accurately.
-    The columns in the dataset are: {', '.join(electric_cars.columns)}.
-    The first few rows of the dataset are:\n{electric_cars.head()}
-    """
     suggest_questions = "Suggest some specific data analysis questions that could be answered with this dataset."
     msgs_suggest_questions = [
         SystemMessage(content="You are a data analysis expert."),
         HumanMessage(content=f"{dataset_description}\n\n{suggest_questions}")
     ]
-    rsps_suggest_questions = chat(msgs_suggest_questions)
+    
+    rsps_suggest_questions = chat_instance(msgs_suggest_questions)
     
     # Extract questions and separate them with newline
     questions = rsps_suggest_questions.content.split('\n')
 
     # Return each question in a separate line
-    return '<br>'.join(questions)
+    return render_template('analyze.html', questions=questions)
 
 if __name__ == '__main__':
     app.run(debug=True)
